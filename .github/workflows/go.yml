@@ -1,0 +1,31 @@
+name: Go
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: 1.21
+
+    - name: Static check
+      run: go vet ./...
+
+    - name: Test
+      run: go test -v ./...
+
+    - name: Build inter-token tool
+      run: go build ./cmd/inter-token
+
+    - name: Build inter-banking tool
+      run: go build ./cmd/inter-banking
+
