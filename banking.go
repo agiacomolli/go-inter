@@ -13,6 +13,85 @@ import (
 	"time"
 )
 
+type Banking struct {
+	client *Client
+	token  Token
+}
+
+func NewBanking(client *Client, token Token) *Banking {
+	return &Banking{
+		client: client,
+		token:  token,
+	}
+}
+
+type Balance struct {
+	Available               float32
+	Limit                   float32
+	CheckOnHold             float32
+	JudiciallyBlocked       float32
+	AdministrativelyBlocked float32
+}
+
+func (b *Banking) Balance(ctx context.Context, date time.Time) (Balance, error) {
+	endpoint := fmt.Sprintf("%s/banking/v2/saldo", b.client.apiBaseUrl)
+
+	req, err := http.NewRequestWithContext(ctx, "GET", endpoint, nil)
+	if err != nil {
+		return Balance{}, err
+	}
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", b.token.Data))
+
+	q := url.Values{}
+	q.Add("dataSaldo", date.Format(time.DateOnly))
+
+	req.URL.RawQuery = q.Encode()
+
+	resp, err := b.client.Do(req)
+	if err != nil {
+		return Balance{}, err
+	}
+	defer resp.Body.Close()
+
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return Balance{}, err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return Balance{}, errors.New(string(data))
+	}
+
+	return parseApiBalance(data)
+}
+
+type apiBalance struct {
+	Available               float32 `json:"disponivel"`
+	Limit                   float32 `json:"limite"`
+	CheckOnHold             float32 `json:"bloqueadoCheque"`
+	JudiciallyBlocked       float32 `json:"bloqueadoJudicialmente"`
+	AdministrativelyBlocked float32 `json:"bloqueadoAdministrativo"`
+}
+
+func parseApiBalance(d []byte) (Balance, error) {
+	var tmp apiBalance
+
+	err := json.Unmarshal(d, &tmp)
+	if err != nil {
+		return Balance{}, err
+	}
+
+	return Balance{
+		Available:               tmp.Available,
+		Limit:                   tmp.Limit,
+		CheckOnHold:             tmp.CheckOnHold,
+		JudiciallyBlocked:       tmp.JudiciallyBlocked,
+		AdministrativelyBlocked: tmp.AdministrativelyBlocked,
+	}, nil
+}
+
 type TransactionType int
 
 const (
@@ -59,18 +138,6 @@ type Transaction struct {
 	Value       float32
 	Title       string
 	Description string
-}
-
-type Banking struct {
-	client *Client
-	token  Token
-}
-
-func NewBanking(client *Client, token Token) *Banking {
-	return &Banking{
-		client: client,
-		token:  token,
-	}
 }
 
 func (b *Banking) Transactions(ctx context.Context, start, end time.Time) ([]Transaction, error) {
