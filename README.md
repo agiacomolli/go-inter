@@ -17,10 +17,23 @@ expires   2022-02-02T02:22:22-03:00
 scopes    extrato.read
 ```
 
+## Fetch account balances
+
+```sh
+./inter-banking --token a1200a94-b847-4cda-a510-cc0b9c7182d4 --date 2022-02-02 --output-format full
+Balances at 2022-02-02
+
+Available                  143293.57
+Limit                           0.00
+On hold                         0.00
+Judicially blocked              0.00
+Administratively blocked        0.00
+```
+
 ## List account statements
 
 ```sh
-./inter-banking -token a1200a94-b847-4cda-a510-cc0b9c7182d4 -start 2022-02-02 -end 2023-02-12
+./inter-banking --token a1200a94-b847-4cda-a510-cc0b9c7182d4 --start-date 2022-02-02 --end-date 2023-02-12
 Statements from 2022-02-02 to 2022-02-12
 
 Date             Value   Operation  Type           Title                   Description
@@ -28,3 +41,4 @@ Date             Value   Operation  Type           Title                   Descr
 2022-02-05    22300.00   debit      pix            Pix enviado             PIX ENVIADO - Cp :123456  
 2022-02-09     1000.00   debit      pix            Pix enviado             PIX ENVIADO - Cp :789012
 ```
+
