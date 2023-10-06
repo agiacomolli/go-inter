@@ -9,8 +9,8 @@ $ go build ./cmd/inter-banking
 
 ## Authorize and get the user token
 
-```sh
-$ ./inter-token -scopes extrato.read -client-id <your client id> -client-secret <your client secret> --output-format info
+```
+$ inter-token -scopes extrato.read -client-id <your client id> -client-secret <your client secret> --output-format info
 token     a1200a94-b847-4cda-a510-cc0b9c7182d4
 type      Bearer
 expires   2022-02-02T02:22:22-03:00
@@ -22,7 +22,7 @@ scopes    extrato.read
 
 Show the command help using `inter-banking --help`
 
-```sh
+```
 Usage: inter-banking [OPTION...] <COMMAND>
 
   -h, --help                 give this help list
@@ -47,8 +47,8 @@ statement                    fetch account statements
 
 ### Fetch account balances
 
-```sh
-./inter-banking --token a1200a94-b847-4cda-a510-cc0b9c7182d4 --date 2022-02-02 --output-format full
+```
+$ inter-banking --token a1200a94-b847-4cda-a510-cc0b9c7182d4 --date 2022-02-02 --output-format full
 Balances at 2022-02-02
 
 Available                  143293.57
@@ -60,8 +60,8 @@ Administratively blocked        0.00
 
 ### List account statements
 
-```sh
-./inter-banking --token a1200a94-b847-4cda-a510-cc0b9c7182d4 --start-date 2022-02-02 --end-date 2023-02-12
+```
+$ inter-banking --token a1200a94-b847-4cda-a510-cc0b9c7182d4 --start-date 2022-02-02 --end-date 2023-02-12
 Statements from 2022-02-02 to 2022-02-12
 
 Date             Value   Operation  Type           Title                   Description
