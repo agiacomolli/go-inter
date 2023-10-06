@@ -17,7 +17,35 @@ expires   2022-02-02T02:22:22-03:00
 scopes    extrato.read
 ```
 
-## Fetch account balances
+
+## Use the banking tool
+
+Show the command help using `inter-banking --help`
+
+```sh
+Usage: inter-banking [OPTION...] <COMMAND>
+
+  -h, --help                 give this help list
+  -c, --cert                 signed certificate file (default 'cert.crt')
+  -k, --key                  certificate private key file (default 'cert.key')
+  -t, --token                personal user token
+
+
+balance                      get account balance
+
+  -d, --date                 balance date in the format YYYY-MM-DD (defaults to
+                             today)
+  -f, --output-format        the output format used to show balance; can be
+                             'short' (default) or 'full'
+
+statement                    fetch account statements
+
+  -s, --start-date           statements start date in the format YYYY-MM-DD
+  -e, --end-date             statements end date in the format YYYY-MM-DD (defaults to
+                             today)
+```
+
+### Fetch account balances
 
 ```sh
 ./inter-banking --token a1200a94-b847-4cda-a510-cc0b9c7182d4 --date 2022-02-02 --output-format full
@@ -30,7 +58,7 @@ Judicially blocked              0.00
 Administratively blocked        0.00
 ```
 
-## List account statements
+### List account statements
 
 ```sh
 ./inter-banking --token a1200a94-b847-4cda-a510-cc0b9c7182d4 --start-date 2022-02-02 --end-date 2023-02-12
